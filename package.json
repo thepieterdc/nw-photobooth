@@ -6,8 +6,11 @@
   "author": "Pieter De Clercq <pieterdeclercq@outlook.com>",
   "window": {
     "toolbar": false,
-    "width": 800,
-    "height": 500
+    "width": 640,
+    "height": 530
   },
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+      "jquery": "*"
+  }
 }

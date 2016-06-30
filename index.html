@@ -4,11 +4,41 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <title>nw-photobooth</title>
-    <link href="./assets/css/bootswatch.flatly.min.css" rel="stylesheet" />
+    <link href="./assets/css/bootswatch.flatly.min.css" rel="stylesheet"/>
 </head>
-<body>
+<body onload="init();" style="overflow:hidden">
 <div class="col-md-12" style="padding:0">
-    <div class="alert alert-info">Press space to take a picture.</div>
+    <div class="alert alert-info" style="margin:0;border-radius: 0">Press space to take a picture. Photos are saved to your Images folder.</div>
+    <div class="alert alert-danger" id="errormsg" style="display:none;border-radius:0"><strong>Error!</strong> Could not
+        access your webcam.
+    </div>
+    <video autoplay id="webcamview"></video>
 </div>
+<script type="text/javascript" src="./node_modules/jquery/dist/jquery.min.js"></script>
+<script type="text/javascript">
+    function init() {
+        if (navigator.webkitGetUserMedia) {
+            navigator.webkitGetUserMedia({video: true}, onSuccess, onFail);
+        } else {
+            $("#alert-info").hide();
+            $("#alert-danger").show();
+        }
+    }
+
+    function onSuccess(stream) {
+        $("#webcamview").attr('src', URL.createObjectURL(stream));
+    }
+
+    function onFail() {
+        $("#alert-info").hide();
+        $("#alert-danger").show();
+    }
+
+    $(document).on("keypress", function(e) {
+       if(e.keyCode === 0 || e.keyCode === 32) {
+           
+       }
+    });
+</script>
 </body>
 </html>
