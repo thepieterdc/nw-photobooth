@@ -1,0 +1,19 @@
+{
+  "name": "nw-photobooth",
+  "description": "Very simple webcam application written in nw.js",
+  "main": "index.html",
+  "authors": [
+    "Pieter De Clercq <pieterdeclercq@outlook.com>"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "webcam",
+    "application",
+    "nwjs"
+  ],
+  "homepage": "https://github.com/thepieterdc/nw-photobooth",
+  "private": true,
+  "dependencies": {
+    "bootswatch": "^3.3.6+2"
+  }
+}
