@@ -8,14 +8,19 @@
 </head>
 <body onload="init();" style="overflow:hidden">
 <div class="col-md-12" style="padding:0">
-    <div class="alert alert-info" style="margin:0;border-radius: 0">Press space to take a picture. Photos are saved to your Images folder.</div>
+    <div class="alert alert-info" style="margin:0;border-radius: 0">Press space to take a picture. Photos are being saved to My Documents/Webcam</div>
     <div class="alert alert-danger" id="errormsg" style="display:none;border-radius:0"><strong>Error!</strong> Could not
         access your webcam.
     </div>
     <video autoplay id="webcamview"></video>
+    <canvas id="photocanvas" style="display:none"></canvas>
 </div>
 <script type="text/javascript" src="./node_modules/jquery/dist/jquery.min.js"></script>
 <script type="text/javascript">
+    var fs = require("fs");
+    var path = require("path");
+    var mkdirp = require("mkdirp");
+
     function init() {
         if (navigator.webkitGetUserMedia) {
             navigator.webkitGetUserMedia({video: true}, onSuccess, onFail);
@@ -34,10 +39,38 @@
         $("#alert-danger").show();
     }
 
-    $(document).on("keypress", function(e) {
-       if(e.keyCode === 0 || e.keyCode === 32) {
-           
-       }
+    function getUserHome() {
+        return process.env.HOME || process.env.USERPROFILE;
+    }
+
+    $(document).on("keypress", function (e) {
+        if (e.keyCode === 0 || e.keyCode === 32) {
+            var canvas = document.getElementById("photocanvas");
+            var context = canvas.getContext("2d");
+            canvas.width = 640;
+            canvas.height = 480;
+            context.drawImage(document.getElementById("webcamview"), 0, 0, 640, 480);
+
+            var photo = canvas.toDataURL("image/png");
+            var matches = photo.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/), response = {};
+
+            if (matches.length !== 3) {
+                return;
+            }
+
+            response.type = matches[1];
+            response.data = new Buffer(matches[2], 'base64');
+
+            var savedir = path.join(getUserHome(), "Documents", "Webcam");
+
+            if(!fs.existsSync(savedir)) {
+                mkdirp(savedir);
+            }
+
+            fs.writeFile(path.join(savedir, (new Date).getTime()+".png"), response.data, function(error) {
+               console.log(error);
+            });
+        }
     });
 </script>
 </body>
